@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+
+<HEAD>
+
+<TITLE>UNaXcess</TITLE>
+
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+
+<LINK title=styles href="styles.css" type="text/css" rel="stylesheet">
+
+<script src="json2.js"></script>
+<script src="jquery-1.4.4.min.js"></script>
+
+<script src="uaJSON.js"></script>
+<script src="UAcebook.js"></script>
+
+<script type="text/javascript">
+
+function runCommand(text) {
+  var space = text.indexOf(" ");
+  if(space > 0) {
+    var command = text.substring(0, space).toLowerCase();
+    var args = text.substring(space + 1);
+    myAlert("Command '" + command + "', args '" + args + "'", "runCommand");
+    if(command == "f" || command == "folder") {
+      showFolder(args);
+    } else if(command == "m" || command == "message") {
+      showMessage(args);
+    } else if(command == "e" || command == "enter") {
+        postMessage("test1", null, "Testing", null, args);
+    }
+  } else {
+    myAlert("Bad command " + text, "runCommand");
+  }
+}
+
+$(document).ready(function() {
+  //alert("Calling showUnreadFolders");
+  showFolders("unread");
+
+  showUsername();
+});
+
+</script>
+
+</HEAD>
+
+<BODY>
+
+<DIV id="header">
+<A href="https://ua2.org/"><IMG class=unaxcess alt="UNaXcess" src="UA.gif" border=0></A>
+</DIV>
+
+<DIV id="menubar">
+
+<UL>
+  <LI>Folders (&lt;unread&gt; of &lt;total&gt;)...</LI>
+  <LI><A href="#" onclick="showFolders('unread');return false">Unread</A> / <A href="#" onclick="showFolders('subscribed');return false">Subscribed</A> / <A href="#" onclick="showFolders('all');return false">All</A></LI>
+  <LI><IMG height=1 src="break.gif" width="100%"></LI>
+  <LI>
+  <DIV id="folders">
+  </DIV>
+  </LI>
+  <LI><IMG height=1 src="break.gif" width="100%"></LI>
+  <LI><A class=unselected href="">Logout</A></LI>
+</UL>
+
+</DIV>
+
+<DIV id="main">
+
+<TABLE class="article" cellSpacing=0 cellPadding=0>
+
+<TR>
+<td class=articleheader>
+<P>
+Hi <span id="username" style="font-weight: bold;">$USERNAME</span>. You have <span id="totalunread" style="font-weight: bold;">0</span> unread messages (last refresh <span id="lastRefresh" style="font-weight: bold;">00:00</span>).<BR>
+</P>
+Commands go in the box.<br>
+<form>
+<input id="command" type="text" size="60" onKeyPress="if(event.keyCode == 13) { runCommand(form.command.value); } return event.keyCode != 13"/>
+</form>
+</td>
+</TR>
+
+<TR>
+<td class=articlebody>
+<p><A href="#" onclick="setFolderFilter('unread');return false">Unread</A> / <A href="#" onclick="setFolderFilter('all');return false">All</A></p>
+<div id="folder" class="scroll">
+</div>
+</TD>
+</TR>
+<TR>
+<td class=articlebody>
+<div id="messageheaders">
+<br>
+<br>
+</div>
+<div id="messagebody">
+<br>
+<br>
+<br>
+<br>
+</div>
+</TD>
+</TR>
+
+<!--
+<TR>
+<td class=articlebody>
+<P>Annoucements go here?
+</P>
+</TD>
+</TR>
+-->
+
+</TABLE>
+
+</DIV>
+
+</BODY>
+
+</HTML>
