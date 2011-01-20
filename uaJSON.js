@@ -55,6 +55,9 @@ function getHtmlText(text) {
   text = text.replace(/\n/g, "<br>\n");
   text = text.replace(/\r/g, "");
 
+  text = text.replace(/(ftp|http|https|file):\/\/[\S]+(\b|$)/gim,'<a href="$&" target="_blank">$&</a>');
+  text = text.replace(/([^\/])(www[\S]+(\b|$))/gim,'$1<a href="http://$2" class="my_link" target="_blank">$2</a>');
+
   return text;
 }
 
@@ -63,7 +66,8 @@ function sendGetRequest(url, successFunction) {
   // Set cursor to hourglass
   document.body.style.cursor = "wait";
 
-  url = "/uaJSON" + url;
+  try {
+  url = getUrl(url);
 
   if(debug) {
     myAlert("Sending " + url, "sendGetRequest");
@@ -91,6 +95,9 @@ function sendGetRequest(url, successFunction) {
       myAlert("Error requesting " + url +"\nStatus: " + status + "\nError: " + error, "sendGetRequest");
     }
   });
+  } catch(e) {
+	myAlert("Exception " + e.message, "sendGetRequest");
+  }
 
   // Turn hourglass off
   document.body.style.cursor = "default";
@@ -101,7 +108,7 @@ function sendPostRequest(url, json, successFunction) {
   document.body.style.cursor = "wait";
 
   try {
-  url = "/uaJSON" + url;
+  url = getUrl(url);
 
   if(debug) {
     myJSONAlert("Sending " + url, json, "sendPostRequest");

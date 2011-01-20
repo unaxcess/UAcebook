@@ -4,7 +4,7 @@
 
 <HEAD>
 
-<TITLE>UNaXcess</TITLE>
+<TITLE>UAcebook</TITLE>
 
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
 
@@ -13,30 +13,55 @@
 <script src="json2.js"></script>
 <script src="jquery-1.4.4.min.js"></script>
 
+<script src="config.js"></script>
 <script src="uaJSON.js"></script>
 <script src="UAcebook.js"></script>
 
 <script type="text/javascript">
 
 function runCommand(text) {
+  try {
   var space = text.indexOf(" ");
   if(space > 0) {
     var command = text.substring(0, space).toLowerCase();
     var args = text.substring(space + 1);
     myAlert("Command '" + command + "', args '" + args + "'", "runCommand");
-    if(command == "f" || command == "folder") {
-      showFolder(args);
-    } else if(command == "m" || command == "message") {
-      showMessage(args);
-    } else if(command == "e" || command == "enter") {
-        postMessage("test1", null, "Testing", null, args);
+    if(command == "j" && args.length > 0) {
+      if(args.charAt(0) >= '0' && args.charAt(0) <= '9') {
+        showMessage(args);
+      } else {
+        showFolder(args);
+      }
+    } else if(command == "e") {
+      var space = args.indexOf(" ");
+      if(space > 0) {
+        var subject = args.substring(0, space);
+        args = args.substring(space + 1);
+        myAlert("postMessage(\"test1\", null, \"" + subject + "\", null, " + args + ");", "runCommand");
+        postMessage("test1", null, subject, null, args);
+      }
+    } else if(command == "p") {
+      var space = args.indexOf(" ");
+      if(space > 0) {
+        var to = args.substring(0, space);
+        args = args.substring(space + 1);
+        //myAlert("postMessage(\"private\", " + to + ", \"Diverted Page\", null, " + args + ");", "runCommand");
+        postMessage("private", to, "Diverted Page", null, args);
+      }
+    } else {
+      myAlert("Quit your crazy jibber jabber foo", "runCommand");
     }
   } else {
     myAlert("Bad command " + text, "runCommand");
   }
+  } catch(e) {
+    myAlert("Oh dear, " + e.name + ". " + e.message, "runCommand");
+  }
 }
 
 $(document).ready(function() {
+  showBanner();
+	
   //alert("Calling showUnreadFolders");
   showFolders("unread");
 
@@ -49,34 +74,32 @@ $(document).ready(function() {
 
 <BODY>
 
-<DIV id="header">
-<A href="https://ua2.org/"><IMG class=unaxcess alt="UNaXcess" src="UA.gif" border=0></A>
-</DIV>
+<A href="https://ua2.org/"><IMG alt="UNaXcess" src="UA.gif" border=0></A>
 
-<DIV id="menubar">
+<DIV id="folders" class="box">
 
 <UL>
   <LI>Folders (&lt;unread&gt; of &lt;total&gt;)...</LI>
   <LI><A href="#" onclick="showFolders('unread');return false">Unread</A> / <A href="#" onclick="showFolders('subscribed');return false">Subscribed</A> / <A href="#" onclick="showFolders('all');return false">All</A></LI>
   <LI><IMG height=1 src="break.gif" width="100%"></LI>
   <LI>
-  <DIV id="folders">
+  <DIV id="foldersList">
   </DIV>
   </LI>
   <LI><IMG height=1 src="break.gif" width="100%"></LI>
-  <LI><A class=unselected href="">Logout</A></LI>
+  <!-- <LI><A class=unselected href="">Logout</A></LI> -->
 </UL>
 
 </DIV>
 
-<DIV id="main">
+<DIV id="rightside">
 
 <TABLE class="article" cellSpacing=0 cellPadding=0>
 
 <TR>
 <td class=articleheader>
 <P>
-Hi <span id="username" style="font-weight: bold;">$USERNAME</span>. You have <span id="totalunread" style="font-weight: bold;">0</span> unread messages (last refresh <span id="lastRefresh" style="font-weight: bold;">00:00</span>).<BR>
+Hi <span id="username" style="font-weight: bold;">$USERNAME</span>. You have <span id="totalUnread" style="font-weight: bold;">0</span> unread messages (last refresh <span id="lastRefresh" style="font-weight: bold;">00:00</span>).<BR>
 </P>
 Commands go in the box.<br>
 <form>
@@ -87,22 +110,30 @@ Commands go in the box.<br>
 
 <TR>
 <td class=articlebody>
-<p><A href="#" onclick="setFolderFilter('unread');return false">Unread</A> / <A href="#" onclick="setFolderFilter('all');return false">All</A></p>
+<div class="box" style="visible:false">
+<!--
+<ul>
+<li>Messages<span id="folderName"></span>...</li>
+<li><A href="#" onclick="setMessageFilter('unread');return false">Unread</A> / <A href="#" onclick="setMessageFilter('all');return false">All</A></li>
+</ul>
+-->
+<A href="#" onclick="setMessageFilter('unread');return false">Unread</A> / <A href="#" onclick="setMessageFilter('all');return false">All</A><br>
+</div>
 <div id="folder" class="scroll">
 </div>
 </TD>
 </TR>
 <TR>
 <td class=articlebody>
-<div id="messageheaders">
-<br>
-<br>
+<div id="messageheaders" class="box">
+&nbsp;<br>
+&nbsp;<br>
 </div>
 <div id="messagebody">
-<br>
-<br>
-<br>
-<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
 </div>
 </TD>
 </TR>
@@ -123,3 +154,4 @@ Commands go in the box.<br>
 </BODY>
 
 </HTML>
+<html><body></body></html><html><body></body></html>

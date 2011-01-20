@@ -1,8 +1,9 @@
-client = "UAcebook v0.3";
+client = "UAcebook v0.4";
 
+//myAlert("Setting stuff up", "UAcebook.js");
 var currentFolderName = null;
-var currentFolderFilter = "unread";
-var currentMessageId = null;
+var currentMessageFilter = "unread";
+var currentMessageElement = null;
 var currentUser = null;
 
 function createLink(id, style, url, text) {
@@ -26,25 +27,13 @@ function getFieldStr(name, value) {
   return "<br>\n" + name + ": <b>" + value + "</b>";
 }
 
-function setElementClass(elementName, className) {
-  var element = document.getElementById(elementName);
-  if(element != null) {
-    element.className = className;
-  }
-}
-
-function setElementReverseVideo(elementName) {
-  var element = document.getElementById(elementName);
-  if(element != null) {
-    var fgcol = element.style.color;
-    var bgcol = element.style.backgroundColor;
-	//myAlert("Switching colours " + fgcol + " and " + bgcol, "setElementReverseVideo");
-    element.style.color = bgcol;
-    element.style.backgroundColor = fgcol;
-  }
-}
-
 var foldersTimer = 0;
+
+function showBanner() {
+  sendGetRequest("/system", function(response) {
+    $("#folder").html("<pre>\n" + response.banner + "\n</pre>");
+  });
+}
 
 function showFolders(type) {
   //alert("Showing unread folders");
@@ -56,24 +45,29 @@ function showFolders(type) {
     var totalUnread = 0;
     var div = "";
     $.each(response, function(i, item) {
-      var text = item.folder;
+      var text = "<span id=\"folder-" + item.folder + "\">";
+      text += item.folder;
       if(item.unread > 0) {
     	text += " (" + item.unread + " of " + item.count + ")"
       } else if(item.count > 0) {
       	text += " (" + item.count + ")"
       }
+      text += "</span>";
       if(div.length > 0) {
     	div += "<br>\n";
       }
-      div += createLink("folder-" + item.folder, null, "showFolder('" + item.folder + "')", text);
-      
+      //div += createLink("folder-" + item.folder, null, "showFolder('" + item.folder + "')", text);
+      div += createLink(null, null, "showFolder('" + item.folder + "')", text);
+
       if(item.subscribed) {
         totalUnread += item.unread;
       }
     });
-    $("#folders").html(div);
+    $("#foldersList").html(div);
+    
+    $("#folder-" + currentFolderName).addClass("currentFolder");
 
-    $("#totalunread").html(totalUnread);
+    $("#totalUnread").html(totalUnread);
 
     var d = new Date();
     $("#lastRefresh").html(d.format('H:i'));
@@ -82,17 +76,31 @@ function showFolders(type) {
   if(foldersTimer != 0) {
 	clearTimeout(foldersTimer);
   }
-  foldersTimer = setTimeout("showFolders('" + type + "')", 30000);
+  foldersTimer = setTimeout("showFolders('" + type + "')", 120000);
 }
 
 function showFolder(name) {
   sendGetRequest("/folder/" + name, function(response) {
-    if(currentFolderName != null) {
-      setElementClass("folder-" + currentFolderName, null);
-    }
+	if(currentFolderName != name) {
+	  currentMessageElement = null;
+	}
+	
+	$("#folder-" + currentFolderName).removeClass("currentFolder");
     currentFolderName = name;
-    setElementClass("folder-" + currentFolderName, "current");
+	$("#folder-" + currentFolderName).addClass("currentFolder");
 
+    if(currentMessageFilter == "unread") {
+      // If there's no unread messages show them all instead
+      currentMessageFilter = "all";
+      $.each(response, function(i, item) {
+        if(!item.read) {
+          //myAlert("Triggering unread filter because " + item.id + " is unread", "showFolder");
+          currentMessageFilter = "unread";
+          return false;
+        }
+      });
+    }
+    
     var div = "";
 
     var indents = new HashMap();
@@ -106,11 +114,14 @@ function showFolder(name) {
       indents.put(item.id, indent);
 
       //myJSONAlert("Message", item, "showFolder");
-      if(currentFolderFilter != "unread" || !item.read) {
+      if(currentMessageFilter == "all" || !item.read) {
         var d = new Date(1000 * item.epoch);
 
-        var text = "&nbsp;";
-        text = text.repeat(indent);
+        var indentStr = "&nbsp;";
+        indentStr = indentStr.repeat(indent);
+
+        var text = "";
+
         text += getHtmlText(item.subject);
         text += " (" + item.id + " on " + d.format('D j/m');
         text += " from " + item.from + ")";
@@ -121,43 +132,57 @@ function showFolder(name) {
           div += "<br>";
         }
 
-        div += createLink("message-" + item.id, item.read ? "read" : "unread", "showMessage('" + item.id + "')", text) + "\n";
+        div += indentStr + createLink("message-" + item.id, item.read ? "read" : "unread", "showMessage('" + item.id + "')", text) + "\n";
+
+        div += "\n";
       }
     });
 
     $("#folder").html(div);
-    
+
+    $("#folderName").html(" in " + currentFolderName);
+
     var element = document.getElementById("folder");
     if(element != null) {
       element.scrollTop = 0;
     }
   });
+  
+  if(document.getElementById("currentMessageElement") != null) {
+    $(currentMessageElement).addClass("currentMessage");
+  } else {
+    $("#messageheaders").html("<br>\n<br>");
+    $("#messagebody").html("<br>\n<br>\n<br>\n<br>");
+  }
 }
 
-function setFolderFilter(type) {
-  currentFolderFilter = type;
+function setMessageFilter(type) {
+  currentMessageFilter = type;
   showFolder(currentFolderName);
 }
 
 function showMessage(id) {
   sendGetRequest("/message/" + id, function(response) {
-    if(currentMessageId != null) {
-      setElementReverseVideo("message-" + currentMessageId);
+    if(response.folder != currentFolderName) {
+      showFolder(response.folder);
     }
-    currentMessageId = id;
 
-    // Mark message response in folder list as read
-    setElementClass("message-" + currentMessageId, "read");
-    setElementReverseVideo("message-" + currentMessageId);
+    // Reset current indicator i.e. styles on links in the folder list
+    
+    $(currentMessageElement).removeClass("unread currentMessage");
+    
+    currentMessageElement = "#message-" + id;
+    $(currentMessageElement).removeClass("unread");
+    $(currentMessageElement).addClass("read currentMessage");
 
     var d = new Date(1000 * response.epoch);
 
     var div = "\n<b>" + response.id + "</b> in <b>" + response.folder + "</b>, " + d.format('H:i:s l jS F Y');
-    div += getFieldStr("Subject", response.subject);
     div += getFieldStr("From", response.from);
     if(typeof(response.to) != "undefined") {
       div += getFieldStr("To", response.to);
     }
+    div += getFieldStr("Subject", getHtmlText(response.subject));
     if(typeof(response.inReplyTo) != "undefined") {
       div += getFieldStr("In-Reply-To", createLink(null, "messagelink", "showMessage('" + response.inReplyTo + "')", response.inReplyTo));
     }
@@ -167,25 +192,21 @@ function showMessage(id) {
     var div = "\n" + getHtmlText(response.body) + "\n";
 
     $("#messagebody").html(div);
-    
+
     var request = new Array();
     request[0] = parseInt(id);
     sendPostRequest("/message/read", request, function(response) {
     });
-    
-    if(response.folder != currentFolderName) {
-      showFolder(response.folder);
-    }
   });
 }
 
 function postMessage(folder, to, subject, inReplyTo, body) {
   myAlert("Posting in " + folder + " to " + to + " about " + subject + " in reply to " + inReplyTo + " saying " + body, "postMessage");
-  
+
   var command = "folder";
-  
+
   var request = new Object();
-  
+
   if(folder != null) {
     command += "/" + folder;
   }
@@ -198,7 +219,7 @@ function postMessage(folder, to, subject, inReplyTo, body) {
     request.inReplyTo = inReplyTo;
   }
   request.body = body;
-  
+
   sendPostRequest("/" + command, request, function(response) {
     myJSONAlert("Message reply", response, "postMessage");
   }, true);

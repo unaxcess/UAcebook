@@ -2,77 +2,66 @@ BODY {
 	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; BACKGROUND-COLOR: white; FONT-SIZE: 10pt; FONT-FAMILY: sans-serif;
 }
 
-#header {
-	Z-INDEX: 2; RIGHT: 0px; BACKGROUND: white; LEFT: 0px; WIDTH: 200px; BOTTOM: auto; POSITION: fixed; TOP: 0px; HEIGHT: 82px
+.box {
+	FONT-SIZE: 10pt; BORDER-RIGHT: #213139 1px solid; BORDER-TOP: #213139 1px solid; BACKGROUND: #296ba5; BORDER-LEFT: #213139 1px solid; COLOR: #d6d6e7; BORDER-BOTTOM: #213139 1px solid; WHITE-SPACE: nowrap; margin: 5px; padding-top: 5px;
 }
-#header IMG.unaxcess {
-	FLOAT: left; MARGIN-LEFT: 15px
-}
-
-#menubar {
-	BORDER-RIGHT: #213139 1px solid; BORDER-TOP: #213139 1px solid; BACKGROUND: #296ba5; LEFT: 4px; BORDER-LEFT: #213139 1px solid; WIDTH: 200px; COLOR: #d6d6e7; BORDER-BOTTOM: #213139 1px solid; WHITE-SPACE: nowrap; POSITION: fixed; TOP: 82px; HEIGHT: auto; margin-left: 5px;
-}
-#menubar UL {
+.box UL {
 	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; MARGIN-LEFT: 2px; LIST-STYLE-TYPE: none
 }
-#menubar LI {
+.box LI {
 	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; MARGIN-LEFT: 2px; LIST-STYLE-TYPE: none
 }
-#menubar A {
+.box A {
 	COLOR: #d6d6e7; FONT-STYLE: italic; TEXT-DECORATION: none
 }
-#menubar A:hover {
+.box A:hover {
 	COLOR: #213139
 }
-#menubar IMG {
-	PADDING-BOTTOM: 8px; PADDING-TOP: 8px
-}
-#menubar IMG.arrow {
-	BORDER-RIGHT: 0px; PADDING-RIGHT: 4px; BORDER-TOP: 0px; FLOAT: left; PADDING-BOTTOM: 1px; BORDER-LEFT: 0px; PADDING-TOP: 1px; BORDER-BOTTOM: 0px
-}
 
-#main {
+#rightside {
 	BORDER-RIGHT: gray 0px dotted; PADDING-RIGHT: 4px; BORDER-TOP: gray 0px dotted; PADDING-LEFT: 4px; RIGHT: 4px; LEFT: 210px; PADDING-BOTTOM: 4px; BORDER-LEFT: gray 1px dotted; WIDTH: auto; BOTTOM: 0px; PADDING-TOP: 4px; BORDER-BOTTOM: gray 0px dotted; POSITION: absolute; TOP: 4px; HEIGHT: auto; BACKGROUND-COLOR: white
 }
 
-TABLE.article {
-	BORDER-RIGHT: #213139 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #213139 1px solid; PADDING-LEFT: 0px; MARGIN-BOTTOM: 4px; PADDING-BOTTOM: 0px; BORDER-LEFT: #213139 1px solid; WIDTH: 568px; PADDING-TOP: 0px; BORDER-BOTTOM: #213139 1px solid
-}
-.articleheader {
-	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; BACKGROUND: #d6d6e7; PADDING-BOTTOM: 4px; COLOR: #213139; PADDING-TOP: 4px; TEXT-ALIGN: right; BORDER-bottom: #000000 1px solid;
-}
-.articlebody {
-	BORDER-RIGHT: #dddddd 3px solid; BORDER-TOP: #dddddd 3px solid; BORDER-LEFT: #dddddd 3px solid; BORDER-BOTTOM: #dddddd 3px solid
-}
-
-#main A {
-	COLOR: #296ba5
-}
-
-div.scroll {
-	height: 200px;
-	overflow: auto;
-}
-
-.read {
-	COLOR: #d6d6e7; FONT-SIZE: 10pt; TEXT-DECORATION: none
-}
-.unread{
-	COLOR: #d6d6e7; FONT-SIZE: 10pt; FONT-WEIGHT: bold; TEXT-DECORATION: none
-}
-
-#messageheaders {
-	FONT-SIZE: 10pt; BORDER-RIGHT: #213139 1px solid; BORDER-TOP: #213139 1px solid; BACKGROUND: #296ba5; LEFT: 4px; BORDER-LEFT: #213139 1px solid; COLOR: #d6d6e7; BORDER-BOTTOM: #213139 1px solid; margin: 5px;
+#folders {
+	POSITION: fixed; LEFT: 4px; WIDTH: 200px; TOP: 82px; HEIGHT: 400px;
 }
 
 #messagebody {
 	FONT-SIZE: 11pt; COLOR: #000000; padding: 5px;
 }
 
-#messageheaders A {
-	COLOR: #d6d6e7; FONT-SIZE: 10pt;
+#folder {
+	margin: 5px; height: 200px; overflow: auto;
 }
 
-.current {
-  padding: 1px; border: 1px solid;
+#folder A {
+	COLOR: #296ba5
+}
+
+TABLE.article {
+	BORDER-RIGHT: #213139 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #213139 1px solid; PADDING-LEFT: 0px; MARGIN-BOTTOM: 4px; PADDING-BOTTOM: 0px; BORDER-LEFT: #213139 1px solid; WIDTH: 568px; PADDING-TOP: 0px; BORDER-BOTTOM: #213139 1px solid
+}
+
+.articleheader {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; BACKGROUND: #d6d6e7; PADDING-BOTTOM: 4px; COLOR: #213139; PADDING-TOP: 4px; TEXT-ALIGN: right; BORDER-bottom: #000000 1px solid;
+}
+
+.articlebody {
+	BORDER-RIGHT: #dddddd 3px solid; BORDER-TOP: #dddddd 3px solid; BORDER-LEFT: #dddddd 3px solid; BORDER-BOTTOM: #dddddd 3px solid
+}
+
+.read {
+	COLOR: #d6d6e7; FONT-SIZE: 10pt; TEXT-DECORATION: none
+}
+
+.unread{
+	COLOR: #d6d6e7; FONT-SIZE: 10pt; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+
+.currentFolder {
+  COLOR: #296ba5; BACKGROUND: #d6d6e7;
+}
+
+.currentMessage {
+  COLOR: white; BACKGROUND: #d6d6e7;
 }
