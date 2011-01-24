@@ -81,6 +81,8 @@ function showFolders(type) {
 
 function showFolder(name) {
   sendGetRequest("/folder/" + name, function(response) {
+	var filter = currentMessageFilter;
+	
 	if(currentFolderName != name) {
 	  currentMessageElement = null;
 	}
@@ -89,13 +91,13 @@ function showFolder(name) {
     currentFolderName = name;
 	$("#folder-" + currentFolderName).addClass("currentFolder");
 
-    if(currentMessageFilter == "unread") {
+    if(filter == "unread") {
       // If there's no unread messages show them all instead
-      currentMessageFilter = "all";
+      filter = "all";
       $.each(response, function(i, item) {
         if(!item.read) {
           //myAlert("Triggering unread filter because " + item.id + " is unread", "showFolder");
-          currentMessageFilter = "unread";
+          filter = "unread";
           return false;
         }
       });
@@ -114,7 +116,7 @@ function showFolder(name) {
       indents.put(item.id, indent);
 
       //myJSONAlert("Message", item, "showFolder");
-      if(currentMessageFilter == "all" || !item.read) {
+      if(filter == "all" || !item.read) {
         var d = new Date(1000 * item.epoch);
 
         var indentStr = "&nbsp;";
