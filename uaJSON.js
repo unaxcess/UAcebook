@@ -52,8 +52,8 @@ function getHtmlText(text) {
   text = text.replace(/</g, "&lt;");
   text = text.replace(/>/g, "&gt;");
 
-  text = text.replace(/\n/g, "<br>\n");
   text = text.replace(/\r/g, "");
+  text = text.replace(/\n/g, " <br>\n");
 
   text = text.replace(/(ftp|http|https|file):\/\/[\S]+(\b|$)/gim,'<a href="$&" target="_blank">$&</a>');
   text = text.replace(/([^\/])(www[\S]+(\b|$))/gim,'$1<a href="http://$2" class="my_link" target="_blank">$2</a>');
