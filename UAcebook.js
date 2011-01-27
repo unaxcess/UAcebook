@@ -124,7 +124,9 @@ function showFolder(name) {
 
         var text = "";
 
-        text += getHtmlText(item.subject);
+        if(typeof(item.subject) != "undefined") {
+          text += getHtmlText(item.subject);
+        }
         text += " (" + item.id + " on " + d.format('D j/m');
         text += " from " + item.from + ")";
 
@@ -184,17 +186,19 @@ function showMessage(id) {
     if(typeof(response.to) != "undefined") {
       div += getFieldStr("To", response.to);
     }
-    div += getFieldStr("Subject", getHtmlText(response.subject));
+    if(typeof(response.subject) != "undefined") {
+      div += getFieldStr("Subject", getHtmlText(response.subject));
+    }
     if(typeof(response.inReplyTo) != "undefined") {
       div += getFieldStr("In-Reply-To", createLink(null, "messagelink", "showMessage('" + response.inReplyTo + "')", response.inReplyTo));
     }
     div += "\n";
     $("#messageheaders").html(div);
 
-    var div = "\n" + getHtmlText(response.body) + "\n";
-
-    $("#messagebody").html(div);
-
+    if(typeof(response.body) != "undefined") {
+      $("#messagebody").html("\n" + getHtmlText(response.body) + "\n");
+    }
+    
     var request = new Array();
     request[0] = parseInt(id);
     sendPostRequest("/message/read", request, function(response) {
