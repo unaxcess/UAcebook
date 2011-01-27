@@ -19,7 +19,9 @@
 
 <script type="text/javascript">
 
-function runCommand(text) {
+function runCommand(command) {
+  var text = command.value;
+  var clear = true;
   try {
   var space = text.indexOf(" ");
   if(space > 0) {
@@ -50,12 +52,19 @@ function runCommand(text) {
       }
     } else {
       myAlert("Quit your crazy jibber jabber foo", "runCommand");
+      clear = false;
     }
   } else {
     myAlert("Bad command " + text, "runCommand");
+    clear = false;
   }
   } catch(e) {
     myAlert("Oh dear, " + e.name + ". " + e.message, "runCommand");
+    clear = false;
+  }
+  
+  if(clear) {
+    command.value = "";
   }
 }
 
@@ -103,7 +112,7 @@ Hi <span id="username" style="font-weight: bold;">$USERNAME</span>. You have <sp
 </P>
 Commands go in the box.<br>
 <form>
-<input id="command" type="text" size="60" onKeyPress="if(event.keyCode == 13) { runCommand(form.command.value); } return event.keyCode != 13"/>
+<input id="command" type="text" size="60" onKeyPress="if(event.keyCode == 13) { runCommand(form.command); } return event.keyCode != 13"/>
 </form>
 </td>
 </TR>
