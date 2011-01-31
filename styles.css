@@ -39,7 +39,7 @@ BODY {
 }
 
 TABLE.article {
-	BORDER: #213139 1px solid; PADDING: 0px; MARGIN: 4px; WIDTH: 568px;
+	BORDER: #213139 1px solid; PADDING: 0px; MARGIN: 4px; WIDTH: auto;
 }
 
 .articleheader {

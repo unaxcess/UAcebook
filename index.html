@@ -68,11 +68,41 @@ function runCommand(command) {
   }
 }
 
+function enablePostMode(message) {
+  if(message != null) {
+    $("#postReplyId").value = message.id;
+    
+	$("#postFolder").value = message.folder;
+	$("#postTo").value = message.from;
+	$("#postSubject").value = message.folder;
+	$("#postBody").value = message.body + "\r\n\r\n";
+  } else {
+	if(currentFolderName != null) {
+	  $("#postFolder").value = currentFolderName;
+	}
+    
+	myAlert("Setting test fields", "enablePostMode");
+	// TODO: Get rid of this
+    $("#postFolder").value = "test3";
+    $("#postTo").value = "";
+    $("#postSubject").value = "Test";
+    $("#postBody").value = "one\ntwo\nthree\n" + new Date();
+  }
+  
+  $("#viewMessage").hide();
+  $("#postMessage").show();
+}
+
+function disablePostMode() {
+  $("#postMessage").hide();
+  $("#viewMessage").show();
+}
+
 $(document).ready(function() {
   showBanner();
 	
   //alert("Calling showUnreadFolders");
-  showFolders("unread");
+  showFolders("Unread");
 
   showUsername();
 });
@@ -85,18 +115,22 @@ $(document).ready(function() {
 
 <A href="https://ua2.org/"><IMG alt="UNaXcess" src="UA.gif" border=0></A>
 
-<DIV id="folders" class="box">
+<DIV id="folders" class="box" style="margin: 4px">
 
+<input type="checkbox" onchange="debug = !debug"/>Debug
 <UL>
   <LI>Folders (&lt;unread&gt; of &lt;total&gt;)...</LI>
-  <LI><A href="#" onclick="showFolders('unread');return false">Unread</A> / <A href="#" onclick="showFolders('subscribed');return false">Subscribed</A> / <A href="#" onclick="showFolders('all');return false">All</A></LI>
+  <LI>
+  <A id ="showUnreadFolders" href="#" onclick="showFolders('Unread');return false">Unread</A>
+  / <A id="showSubscribedFolders" href="#" onclick="showFolders('Subscribed');return false">Subscribed</A>
+  / <A id="showAllFolders" href="#" onclick="showFolders('All');return false">All</A>
+  </LI>
   <LI><IMG height=1 src="break.gif" width="100%"></LI>
   <LI>
   <DIV id="foldersList">
   </DIV>
   </LI>
   <LI><IMG height=1 src="break.gif" width="100%"></LI>
-  <!-- <LI><A class=unselected href="">Logout</A></LI> -->
 </UL>
 
 </DIV>
@@ -119,32 +153,62 @@ Commands go in the box.<br>
 
 <TR>
 <td class=articlebody>
-<div class="box" style="visible:false">
-<!--
-<ul>
-<li>Messages<span id="folderName"></span>...</li>
-<li><A href="#" onclick="setMessageFilter('unread');return false">Unread</A> / <A href="#" onclick="setMessageFilter('all');return false">All</A></li>
-</ul>
--->
-<A href="#" onclick="setMessageFilter('unread');return false">Unread</A> / <A href="#" onclick="setMessageFilter('all');return false">All</A><br>
+
+<div class="box">
+<div style="text-align:left"><A href="#" id="showUnreadMessages" onclick="setMessageFilter('Unread');return false">Unread</A> / <A id="showAllMessages" href="#" onclick="setMessageFilter('All');return false">All</A></div>
+<div style="text-align:right">
+<form>
+<button onclick="enablePostMode(null);return false">Post</button>
+<!-- <button onclick="return false">Catch Up</button> -->
+</form>
 </div>
+</div>
+
 <div id="folder" class="scroll">
+&nbsp;<br>
 </div>
+
 </TD>
 </TR>
-<TR>
+
+<TR id="viewMessage">
 <td class=articlebody>
-<div id="messageheaders" class="box">
+<div class="box">
+<div style="text-align:right">
+<button type="submit" onclick="return false">Reply</button>
+<button type="submit" onclick="return false">Catch Up</button>
+</div>
+<span id="messageheaders">
 &nbsp;<br>
-&nbsp;<br>
+</span>
 </div>
 <div id="messagebody">
 &nbsp;<br>
-&nbsp;<br>
-&nbsp;<br>
-&nbsp;<br>
 </div>
 </TD>
+</TR>
+
+<TR id="postMessage" style="display:none">
+<form>
+<td class=articlebody>
+<div id="messageheaders" class="box">
+<ul>
+<li><span style="width:25%">Folder</span><input id="postFolder" type="text" style="width:75%"/></li>
+<li><span style="width:25%">To</span><input id="postTo" type="text" style="width:75%"/></li>
+<li><span style="width:25%">Subject</span><input id="postSubject" type="text" style="width:75%"/></li>
+</ul>
+</div>
+<div id="messagebody">
+<textarea id="postBody" cols="80" rows="10">
+</textarea>
+</div>
+<input id="postReplyId" type="hidden" value=""/>
+<div style="text-align:right">
+<button type="submit" onclick="postMessage(form.postFolder.value, form.postTo.value, form.postSubject.value, form.postReplyId.value, form.postBody.value); return false">Send</button>
+<button type="reset" onclick="disablePostMode(); return false">Cancel</button>
+</div>
+</td>
+</form>
 </TR>
 
 <!--
@@ -163,4 +227,3 @@ Commands go in the box.<br>
 </BODY>
 
 </HTML>
-<html><body></body></html><html><body></body></html>
