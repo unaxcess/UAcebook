@@ -1,25 +1,25 @@
 BODY {
-	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; BACKGROUND-COLOR: white; FONT-SIZE: 10pt; FONT-FAMILY: sans-serif;
+	PADDING: 0px; MARGIN: 0px; BACKGROUND-COLOR: white; FONT-SIZE: 10pt; FONT-FAMILY: sans-serif;
 }
 
 .box {
-	FONT-SIZE: 10pt; BORDER-RIGHT: #213139 1px solid; BORDER-TOP: #213139 1px solid; BACKGROUND: #296ba5; BORDER-LEFT: #213139 1px solid; COLOR: #d6d6e7; BORDER-BOTTOM: #213139 1px solid; WHITE-SPACE: nowrap; margin: 5px; padding-top: 5px;
+	FONT-SIZE: 10pt; BORDER: #213139 1px solid; BACKGROUND: #296ba5; COLOR: #d6d6e7; WHITE-SPACE: nowrap; padding: 5px;
 }
 .box UL {
-	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; MARGIN-LEFT: 2px; LIST-STYLE-TYPE: none
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; MARGIN-LEFT: 2px; LIST-STYLE-TYPE: none;
 }
 .box LI {
-	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; MARGIN-LEFT: 2px; LIST-STYLE-TYPE: none
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; MARGIN-LEFT: 2px; LIST-STYLE-TYPE: none;
 }
 .box A {
-	COLOR: #d6d6e7; FONT-STYLE: italic; TEXT-DECORATION: none
+	COLOR: #d6d6e7; FONT-STYLE: italic; TEXT-DECORATION: none;
 }
 .box A:hover {
-	COLOR: #213139
+	COLOR: #213139;
 }
 
 #rightside {
-	BORDER-RIGHT: gray 0px dotted; PADDING-RIGHT: 4px; BORDER-TOP: gray 0px dotted; PADDING-LEFT: 4px; RIGHT: 4px; LEFT: 210px; PADDING-BOTTOM: 4px; BORDER-LEFT: gray 1px dotted; WIDTH: auto; BOTTOM: 0px; PADDING-TOP: 4px; BORDER-BOTTOM: gray 0px dotted; POSITION: absolute; TOP: 4px; HEIGHT: auto; BACKGROUND-COLOR: white
+	PADDING: 3px; padding-top: 5px; padding-right: 0px; LEFT: 215px; BORDER-LEFT: gray 1px dotted; WIDTH: auto; POSITION: absolute; TOP: 0px; HEIGHT: auto;
 }
 
 #folders {
@@ -39,15 +39,19 @@ BODY {
 }
 
 TABLE.article {
-	BORDER-RIGHT: #213139 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #213139 1px solid; PADDING-LEFT: 0px; MARGIN-BOTTOM: 4px; PADDING-BOTTOM: 0px; BORDER-LEFT: #213139 1px solid; WIDTH: 568px; PADDING-TOP: 0px; BORDER-BOTTOM: #213139 1px solid
+	BORDER: #213139 1px solid; PADDING: 0px; MARGIN: 4px; WIDTH: 568px;
 }
 
 .articleheader {
-	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; BACKGROUND: #d6d6e7; PADDING-BOTTOM: 4px; COLOR: #213139; PADDING-TOP: 4px; TEXT-ALIGN: right; BORDER-bottom: #000000 1px solid;
+	PADDING: 4px; BACKGROUND: #d6d6e7; COLOR: #213139; TEXT-ALIGN: right; BORDER-bottom: #000000 1px solid;
 }
 
 .articlebody {
-	BORDER-RIGHT: #dddddd 3px solid; BORDER-TOP: #dddddd 3px solid; BORDER-LEFT: #dddddd 3px solid; BORDER-BOTTOM: #dddddd 3px solid
+	BORDER: #dddddd 3px solid;
+}
+
+.selected {
+	FONT-WEIGHT: bold; FONT-STYLE: italic 
 }
 
 .read {
