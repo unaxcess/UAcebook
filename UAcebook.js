@@ -201,12 +201,19 @@ function showMessage(id) {
     if(typeof(response.subject) != "undefined") {
       div += getFieldStr("Subject", getHtmlText(response.subject));
     }
-    if(typeof(response.replyHierarchy) != "undefined") {
+    if(typeof(response.inReplyToHierarchy) != "undefined") {
       var replyStr = "";
-      $.each(response.replyHierarchy, function(i, item) {
+      $.each(response.inReplyToHierarchy, function(i, item) {
     	replyStr += " " + createLink(null, "messagelink", "showMessage('" + item.id + "')", item.id);
       });
       div += getFieldStr("In-Reply-To", replyStr);
+    }
+    if(typeof(response.replyToBy) != "undefined") {
+      var replyStr = "";
+      $.each(response.replyToBy, function(i, item) {
+    	replyStr += " " + createLink(null, "messagelink", "showMessage('" + item.id + "')", item.id);
+      });
+      div += getFieldStr("Replied-To-In", replyStr);
     }
     div += "\n";
     $("#messageheaders").html(div);
