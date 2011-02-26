@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
-<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HTML>
 
 <HEAD>
 
@@ -157,10 +157,12 @@ Commands go in the box.<br>
 <div class="box">
 <div style="text-align:left"><A href="#" id="showUnreadMessages" onclick="setMessageFilter('Unread');return false">Unread</A> / <A id="showAllMessages" href="#" onclick="setMessageFilter('All');return false">All</A></div>
 <div style="text-align:right">
+<!--
 <form>
 <button onclick="enablePostMode(null);return false">Post</button>
-<!-- <button onclick="return false">Catch Up</button> -->
+<button onclick="return false">Catch Up</button>
 </form>
+-->
 </div>
 </div>
 
@@ -175,8 +177,12 @@ Commands go in the box.<br>
 <td class=articlebody>
 <div class="box">
 <div style="text-align:right">
+<!--
+<form>
 <button type="submit" onclick="return false">Reply</button>
 <button type="submit" onclick="return false">Catch Up</button>
+</form>
+-->
 </div>
 <span id="messageheaders">
 &nbsp;<br>
@@ -188,9 +194,9 @@ Commands go in the box.<br>
 </TD>
 </TR>
 
-<TR id="postMessage" style="display:none">
-<form>
+<TR id="postMessage" style="display: none;">
 <td class=articlebody>
+<form>
 <div id="messageheaders" class="box">
 <ul>
 <li><span style="width:25%">Folder</span><input id="postFolder" type="text" style="width:75%"/></li>
@@ -207,8 +213,8 @@ Commands go in the box.<br>
 <button type="submit" onclick="postMessage(form.postFolder.value, form.postTo.value, form.postSubject.value, form.postReplyId.value, form.postBody.value); return false">Send</button>
 <button type="reset" onclick="disablePostMode(); return false">Cancel</button>
 </div>
-</td>
 </form>
+</td>
 </TR>
 
 <!--
