@@ -19,7 +19,7 @@ BODY {
 }
 
 #rightside {
-	PADDING: 3px; padding-top: 5px; padding-right: 0px; LEFT: 215px; BORDER-LEFT: gray 1px dotted; WIDTH: auto; POSITION: absolute; TOP: 0px; HEIGHT: auto;
+	PADDING: 3px; padding-top: 5px; padding-right: 0px; LEFT: 215px; BORDER-LEFT: gray 1px dotted; WIDTH: 600px; POSITION: absolute; TOP: 0px; HEIGHT: auto;
 }
 
 #folders {
