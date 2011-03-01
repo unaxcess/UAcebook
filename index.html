@@ -22,80 +22,58 @@
 function runCommand(command) {
   var text = command.value;
   var clear = true;
+
   try {
-  var space = text.indexOf(" ");
-  if(space > 0) {
-    var command = text.substring(0, space).toLowerCase();
-    var args = text.substring(space + 1);
-    myAlert("Command '" + command + "', args '" + args + "'", "runCommand");
-    if(command == "j" && args.length > 0) {
-      if(args.charAt(0) >= '0' && args.charAt(0) <= '9') {
-        showMessage(args);
+    var space = text.indexOf(" ");
+    if(space > 0) {
+      var command = text.substring(0, space).toLowerCase();
+      var args = text.substring(space + 1);
+      if(debug) {
+        myAlert("Command '" + command + "', args '" + args + "'", "runCommand");
+      }
+      if(command == "j" && args.length > 0) {
+        if(args.charAt(0) >= '0' && args.charAt(0) <= '9') {
+          showMessage(args);
+        } else {
+          showFolder(args);
+        }
+      } else if(command == "e") {
+        var space = args.indexOf(" ");
+        if(space > 0) {
+          var subject = args.substring(0, space);
+          args = args.substring(space + 1);
+          postMessage("test1", null, subject, null, args, function(response) {
+            myAlert("Posted test message", "runCommand");
+          });
+        }
+      } else if(command == "p") {
+        var space = args.indexOf(" ");
+        if(space > 0) {
+          var to = args.substring(0, space);
+          args = args.substring(space + 1);
+          postMessage("private", to, "Diverted Page", null, args, function(response) {
+            myAlert("Paged " + to, "runCommand");
+          });
+        }
       } else {
-        showFolder(args);
-      }
-    } else if(command == "e") {
-      var space = args.indexOf(" ");
-      if(space > 0) {
-        var subject = args.substring(0, space);
-        args = args.substring(space + 1);
-        myAlert("postMessage(\"test1\", null, \"" + subject + "\", null, " + args + ");", "runCommand");
-        postMessage("test1", null, subject, null, args);
-      }
-    } else if(command == "p") {
-      var space = args.indexOf(" ");
-      if(space > 0) {
-        var to = args.substring(0, space);
-        args = args.substring(space + 1);
-        //myAlert("postMessage(\"private\", " + to + ", \"Diverted Page\", null, " + args + ");", "runCommand");
-        postMessage("private", to, "Diverted Page", null, args);
+        myAlert("Quit your crazy jibber jabber foo", "runCommand");
+        clear = false;
       }
     } else {
-      myAlert("Quit your crazy jibber jabber foo", "runCommand");
+      myAlert("Bad command " + text, "runCommand");
       clear = false;
     }
-  } else {
-    myAlert("Bad command " + text, "runCommand");
-    clear = false;
-  }
   } catch(e) {
     myAlert("Oh dear, " + e.name + ". " + e.message, "runCommand");
     clear = false;
   }
   
   if(clear) {
-    command.value = "";
-  }
-}
-
-function enablePostMode(message) {
-  if(message != null) {
-    $("#postReplyId").value = message.id;
-    
-	$("#postFolder").value = message.folder;
-	$("#postTo").value = message.from;
-	$("#postSubject").value = message.folder;
-	$("#postBody").value = message.body + "\r\n\r\n";
-  } else {
-	if(currentFolderName != null) {
-	  $("#postFolder").value = currentFolderName;
+	if(debug) {
+	  myAlert("Clearing the text", "runCommand");
 	}
-    
-	myAlert("Setting test fields", "enablePostMode");
-	// TODO: Get rid of this
-    $("#postFolder").value = "test3";
-    $("#postTo").value = "";
-    $("#postSubject").value = "Test";
-    $("#postBody").value = "one\ntwo\nthree\n" + new Date();
+    $("#command").val("");
   }
-  
-  $("#viewMessage").hide();
-  $("#postMessage").show();
-}
-
-function disablePostMode() {
-  $("#postMessage").hide();
-  $("#viewMessage").show();
 }
 
 $(document).ready(function() {
@@ -155,15 +133,19 @@ Commands go in the box.<br>
 <td class=articlebody>
 
 <div class="box">
-<div style="text-align:left"><A href="#" id="showUnreadMessages" onclick="setMessageFilter('Unread');return false">Unread</A> / <A id="showAllMessages" href="#" onclick="setMessageFilter('All');return false">All</A></div>
-<div style="text-align:right">
-<!--
+<table width="100%" class="box">
+<tr>
+<td width="150" style="vertical-align: middle;">
+<A href="#" id="showUnreadMessages" onclick="setMessageFilter('Unread');return false">Unread</A> / <A id="showAllMessages" href="#" onclick="setMessageFilter('All');return false">All</A>
+</td>
+<td width="*" style="vertical-align: middle; text-align: right;">
 <form>
 <button onclick="enablePostMode(null);return false">Post</button>
-<button onclick="return false">Catch Up</button>
+<button onclick="return false">Catch Up Folder</button>
 </form>
--->
-</div>
+</td>
+</tr>
+</table>
 </div>
 
 <div id="folder" class="scroll">
@@ -173,23 +155,31 @@ Commands go in the box.<br>
 </TD>
 </TR>
 
-<TR id="viewMessage">
+<TR id="viewMessage" style="display: none;">
 <td class=articlebody>
 <div class="box">
-<div style="text-align:right">
-<!--
-<form>
-<button type="submit" onclick="return false">Reply</button>
-<button type="submit" onclick="return false">Catch Up</button>
-</form>
--->
-</div>
+<table class="box">
+<tr>
+<td>
 <span id="messageheaders">
-&nbsp;<br>
+&nbsp;
 </span>
+</td>
+<td style="text-align: right;">
+<form>
+<button type="submit" onclick="enablePostMode(currentMessage); return false">Reply</button>
+<br>
+<button type="submit" onclick="return false">Catch Up Thread</button>
+</form>
+</td>
+</tr>
+</table>
 </div>
 <div id="messagebody">
-&nbsp;<br>
+&nbsp;
+</div>
+<div id="messagefooters" class="box" style="display: none;">
+&nbsp;
 </div>
 </TD>
 </TR>
@@ -210,7 +200,8 @@ Commands go in the box.<br>
 </div>
 <input id="postReplyId" type="hidden" value=""/>
 <div style="text-align:right">
-<button type="submit" onclick="postMessage(form.postFolder.value, form.postTo.value, form.postSubject.value, form.postReplyId.value, form.postBody.value); return false">Send</button>
+<button type="submit" onclick="postMessage(form.postFolder.value, form.postTo.value, form.postSubject.value, form.postReplyId.value, form.postBody.value, function(response) { disablePostMode(); } ); return false">Send</button>
+<br>
 <button type="reset" onclick="disablePostMode(); return false">Cancel</button>
 </div>
 </form>
