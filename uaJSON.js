@@ -63,6 +63,8 @@ function getHtmlText(text) {
 
 
 function sendGetRequest(url, successFunction) {
+  var success = false;
+	
   // Set cursor to hourglass
   document.body.style.cursor = "wait";
 
@@ -84,6 +86,7 @@ function sendGetRequest(url, successFunction) {
       if(data != null) {
         try {
           successFunction(data);
+          success = true;
         } catch(e) {
           myAlert("Exception " + e.message, "sendGetRequest");
         }
@@ -101,9 +104,13 @@ function sendGetRequest(url, successFunction) {
 
   // Turn hourglass off
   document.body.style.cursor = "default";
+  
+  return success;
 }
 
 function sendPostRequest(url, json, successFunction) {
+  var success = false;
+	
   // Set cursor to hourglass
   document.body.style.cursor = "wait";
 
@@ -127,6 +134,7 @@ function sendPostRequest(url, json, successFunction) {
       if(data != null) {
         try {
           successFunction(data);
+          success = true;
         } catch(e) {
           myAlert("Exception " + e.message, "sendPostRequest");
         }
@@ -144,4 +152,6 @@ function sendPostRequest(url, json, successFunction) {
 
   // Turn hourglass off
   document.body.style.cursor = "default";
+  
+  return success;
 }
