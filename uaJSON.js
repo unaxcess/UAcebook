@@ -63,8 +63,6 @@ function getHtmlText(text) {
 
 
 function sendGetRequest(url, successFunction) {
-  var success = false;
-	
   // Set cursor to hourglass
   document.body.style.cursor = "wait";
 
@@ -80,13 +78,15 @@ function sendGetRequest(url, successFunction) {
     },
     url: url,
     success: function(data, status, req) {
+	  // Turn hourglass off
+	  document.body.style.cursor = "default";
+	  
       if(debug) {
         myJSONAlert("Response: " + status, data, "sendGetRequest");
       }
       if(data != null) {
         try {
           successFunction(data);
-          success = true;
         } catch(e) {
           myAlert("Exception " + e.message, "sendGetRequest");
         }
@@ -95,22 +95,21 @@ function sendGetRequest(url, successFunction) {
       }
     },
     error: function(header, status, error) {
-      myAlert("Error requesting " + url +"\nStatus: " + status + "\nError: " + error, "sendGetRequest");
+	  // Turn hourglass off
+	  document.body.style.cursor = "default";
+
+	  myAlert("Error requesting " + url +"\nStatus: " + status + "\nError: " + error, "sendGetRequest");
     }
   });
   } catch(e) {
+    // Turn hourglass off
+    document.body.style.cursor = "default";
+    
 	myAlert("Exception " + e.message, "sendGetRequest");
   }
-
-  // Turn hourglass off
-  document.body.style.cursor = "default";
-  
-  return success;
 }
 
 function sendPostRequest(url, json, successFunction) {
-  var success = false;
-	
   // Set cursor to hourglass
   document.body.style.cursor = "wait";
 
@@ -128,13 +127,15 @@ function sendPostRequest(url, json, successFunction) {
     type: "POST",
     data: JSON.stringify(json),
     success: function(data, status, req) {
+	  // Turn hourglass off
+	  document.body.style.cursor = "default";
+	  
       if(debug) {
         myJSONAlert("Response: " + status, data, "sendPostRequest");
       }
       if(data != null) {
         try {
           successFunction(data);
-          success = true;
         } catch(e) {
           myAlert("Exception " + e.message, "sendPostRequest");
         }
@@ -143,15 +144,16 @@ function sendPostRequest(url, json, successFunction) {
       }
     },
     error: function(header, status, error) {
+	  // Turn hourglass off
+	  document.body.style.cursor = "default";
+	  
       myAlert("Error requesting " + url +"\nStatus: " + status + "\nError: " + error, "sendPostRequest");
     }
   });
   } catch(e) {
+    // Turn hourglass off
+    document.body.style.cursor = "default";
+    
     myAlert("Exception " + e.message, "sendPostRequest");
   }
-
-  // Turn hourglass off
-  document.body.style.cursor = "default";
-  
-  return success;
 }
