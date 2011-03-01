@@ -4,6 +4,7 @@ client = "UAcebook v0.5";
 var currentFolderFilter = "Unread";
 var currentFolderName = null;
 var currentMessageFilter = null;
+var currentMessage = null;
 var currentMessageElement = null;
 var currentUser = null;
 
@@ -165,9 +166,9 @@ function showFolder(name, filter) {
   
   if(document.getElementById("currentMessageElement") != null) {
     $(currentMessageElement).addClass("currentMessage");
+    setMessageMode(true, false);
   } else {
-    $("#messageheaders").html("<br>\n<br>");
-    $("#messagebody").html("<br>\n<br>\n<br>\n<br>");
+	  setMessageMode(false, false);
   }
 }
 
@@ -186,6 +187,9 @@ function showMessage(id) {
     // Reset current indicator i.e. styles on links in the folder list
     
     $(currentMessageElement).removeClass("unread currentMessage");
+    
+    currentMessage = response;
+    setMessageMode(true, false);
     
     currentMessageElement = "#message-" + id;
     $(currentMessageElement).removeClass("unread");
@@ -221,6 +225,17 @@ function showMessage(id) {
     if(typeof(response.body) != "undefined") {
       $("#messagebody").html("\n" + getHtmlText(response.body) + "\n");
     }
+
+    if(typeof(response.annotations) != "undefined") {
+      var annotationsStr = "";
+      $.each(response.annotations, function(i, item) {
+    	annotationsStr += getFieldStr("Edited by", item.from) + ", " + item.body; 
+      });
+      $("#messagefooters").html(annotationsStr);
+      $("#messagefooters").show();
+    } else {
+      $("#messagefooters").hide();
+    }
     
     var request = new Array();
     request[0] = parseInt(id);
@@ -229,8 +244,10 @@ function showMessage(id) {
   });
 }
 
-function postMessage(folder, to, subject, inReplyTo, body) {
-  myAlert("Posting in " + folder + " to " + to + " about " + subject + " in reply to " + inReplyTo + " saying " + body, "postMessage");
+function postMessage(folder, to, subject, inReplyTo, body, successFunction) {
+  if(debug) {
+    myAlert("Posting in " + folder + " to " + to + " about " + subject + " in reply to " + inReplyTo + " saying " + body, "postMessage");
+  }
 
   var command = "folder";
 
@@ -248,9 +265,21 @@ function postMessage(folder, to, subject, inReplyTo, body) {
   }
   request.body = body;
 
-  sendPostRequest("/" + command, request, function(response) {
-    myJSONAlert("Message reply", response, "postMessage");
-  }, true);
+  return sendPostRequest("/" + command, request, function(response) {
+	if(debug) {
+      myJSONAlert("Message reply", response, "postMessage");
+	} else {
+	  myAlert("Posted message in " + response.folder, "postMessage");
+	}
+	
+	if(successFunction != null) {
+      try {
+	    successFunction(response);
+      } catch(e) {
+        myAlert("Exception calling success function " + e.message, "postMessage");
+      } 
+	}
+  });
 }
 
 function showUsername() {
@@ -261,4 +290,48 @@ function showUsername() {
       $("#username").html(currentUser.name);
     });
   }
+}
+
+function setMessageMode(view, post) {
+  if(view) {
+    $("#viewMessage").show();
+  } else {
+    $("#viewMessage").hide();
+  }
+  
+  if(post) {
+    $("#postMessage").show();
+  } else {
+    $("#postMessage").hide();
+  }
+}
+
+function enablePostMode(message) {
+  if(message != null) {
+	if(debug) {
+	  myJSONAlert("Message", message, "enablePostMode");
+	}
+	  
+    $("#postReplyId").val(message.id);
+    
+	$("#postFolder").val(message.folder);
+	$("#postTo").val(message.from);
+	$("#postSubject").val(message.subject);
+	$("#postBody").val(message.body + "\r\n\r\n");
+  } else {
+	if(currentFolderName != null) {
+	  $("#postReplyId").val("");
+	  
+      $("#postFolder").val(currentFolderName);
+      $("#postTo").val("");
+	  $("#postSubject").val("");
+      $("#postBody").val("");
+	}
+  }
+
+  setMessageMode(false, true);
+}
+
+function disablePostMode() {
+  setMessageMode(true, false);
 }
