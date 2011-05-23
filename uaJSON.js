@@ -122,6 +122,7 @@ function sendPostRequest(url, json, successFunction) {
   $.ajax({
     beforeSend: function(req) {
       req.setRequestHeader("User-Agent", client);
+      req.setRequestHeader("Content-Type", "application/json");
     },
     url: url,
     type: "POST",
