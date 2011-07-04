@@ -332,6 +332,23 @@ function enablePostMode(message) {
   setMessageMode(false, true);
 }
 
+function catchup() {
+  if(message != null) {
+    if(debug) {
+      myJSONAlert("Message", message, "catchup");
+    }
+    
+    var request = new Array();
+    request[0] = parseInt(message.id);
+    sendPostRequest("/catchup/message/sticky", request, function(response) {
+    });
+  
+    if(message.folder == currentFolderName) {
+      showFolder(message.folder);
+    }
+  }
+}
+
 function disablePostMode() {
   setMessageMode(true, false);
 }
